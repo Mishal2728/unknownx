@@ -31,121 +31,122 @@
 }
 
 :root {
-  --background: 240 10% 2%;
+  --background: 240 15% 1%;
   --foreground: 0 0% 98%;
-  --card: 240 10% 4%;
+  --card: 240 12% 3%;
   --card-foreground: 0 0% 98%;
-  --popover: 240 10% 4%;
+  --popover: 240 12% 3%;
   --popover-foreground: 0 0% 98%;
   --primary: 0 0% 98%;
-  --primary-foreground: 240 10% 2%;
-  --secondary: 240 5% 15%;
+  --primary-foreground: 240 15% 1%;
+  --secondary: 240 5% 12%;
   --secondary-foreground: 0 0% 98%;
-  --muted: 240 5% 15%;
-  --muted-foreground: 240 5% 65%;
-  --accent: 220 80% 50%;
+  --muted: 240 5% 12%;
+  --muted-foreground: 240 5% 62%;
+  --accent: 0 78% 53%;
   --accent-foreground: 0 0% 98%;
-  --destructive: 0 84% 60%;
+  --destructive: 0 78% 53%;
   --destructive-foreground: 0 0% 98%;
   --border: 240 10% 12%;
   --input: 240 10% 12%;
-  --ring: 240 10% 84%;
+  --ring: 0 78% 53%;
   --radius: 0.25rem;
-
   --app-font-sans: 'Outfit', sans-serif;
   --app-font-serif: 'Inter', sans-serif;
   --app-font-mono: 'Space Mono', monospace;
 }
 
 .dark {
-  --background: 240 10% 2%;
+  --background: 240 15% 1%;
   --foreground: 0 0% 98%;
-  --card: 240 10% 4%;
+  --card: 240 12% 3%;
   --card-foreground: 0 0% 98%;
-  --popover: 240 10% 4%;
+  --popover: 240 12% 3%;
   --popover-foreground: 0 0% 98%;
   --primary: 0 0% 98%;
-  --primary-foreground: 240 10% 2%;
-  --secondary: 240 5% 15%;
+  --primary-foreground: 240 15% 1%;
+  --secondary: 240 5% 12%;
   --secondary-foreground: 0 0% 98%;
-  --muted: 240 5% 15%;
-  --muted-foreground: 240 5% 65%;
-  --accent: 220 80% 50%;
+  --muted: 240 5% 12%;
+  --muted-foreground: 240 5% 62%;
+  --accent: 0 78% 53%;
   --accent-foreground: 0 0% 98%;
-  --destructive: 0 84% 60%;
+  --destructive: 0 78% 53%;
   --destructive-foreground: 0 0% 98%;
   --border: 240 10% 12%;
   --input: 240 10% 12%;
-  --ring: 240 10% 84%;
+  --ring: 0 78% 53%;
 }
 
 @layer base {
   html { scroll-behavior: smooth; }
   * { border-color: hsl(var(--border)); }
 
-  @media (hover: hover) and (pointer: fine) {
-    * { cursor: none !important; }
-  }
-
   body {
     @apply font-sans antialiased bg-background text-foreground overflow-x-hidden;
     background-image:
-      radial-gradient(ellipse at 50% 0%, rgba(12, 72, 58, 0.12), transparent 55%),
-      linear-gradient(rgba(52, 211, 153, 0.018) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(52, 211, 153, 0.018) 1px, transparent 1px);
+      radial-gradient(ellipse at 50% 0%, rgba(86, 8, 18, 0.09), transparent 58%),
+      linear-gradient(rgba(248, 64, 82, 0.012) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(248, 64, 82, 0.012) 1px, transparent 1px);
     background-size: auto, 56px 56px, 56px 56px;
     background-attachment: fixed;
   }
 
-  ::selection { background: rgba(52, 211, 153, 0.3); }
+  ::selection { background: rgba(220, 38, 38, 0.34); }
 
-  /* A restrained terminal overlay keeps the existing void/starfield visible. */
+  /* Keep the established void/starfield backdrop; add only subtle interface accents. */
   main > section {
     background-image:
-      linear-gradient(rgba(52, 211, 153, 0.018) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(52, 211, 153, 0.018) 1px, transparent 1px);
+      linear-gradient(rgba(248, 64, 82, 0.012) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(248, 64, 82, 0.012) 1px, transparent 1px);
     background-size: 48px 48px;
   }
 
+  /* Existing utility color classes across all pages now share one deep-red accent. */
+  [class*="text-orange-"], [class*="text-emerald-"], [class*="text-blue-"] { color: #f87171 !important; }
+  [class*="border-orange-"], [class*="border-emerald-"], [class*="border-blue-"] { border-color: rgba(248, 113, 113, 0.28) !important; }
+  [class*="bg-orange-"], [class*="bg-emerald-"], [class*="bg-blue-"] { background-color: rgba(127, 29, 29, 0.18) !important; }
+  [class*="bg-orange-300"], [class*="bg-emerald-300"], [class*="bg-blue-300"] { background-color: #b91c1c !important; }
+  [class*="hover\\:text-orange-"]:hover, [class*="hover\\:text-emerald-"]:hover, [class*="hover\\:text-blue-"]:hover { color: #fca5a5 !important; }
+  [class*="hover\\:bg-orange-"]:hover, [class*="hover\\:bg-emerald-"]:hover, [class*="hover\\:bg-blue-"]:hover { background-color: #b91c1c !important; }
+  [class*="hover\\:border-orange-"]:hover, [class*="hover\\:border-emerald-"]:hover, [class*="hover\\:border-blue-"]:hover { border-color: rgba(248, 113, 113, 0.72) !important; }
+
   main article {
-    border-color: rgba(110, 231, 183, 0.14);
+    border-color: rgba(248, 113, 113, 0.14);
     transition: border-color 220ms ease, background-color 220ms ease, box-shadow 220ms ease;
   }
-
   main article:hover {
-    border-color: rgba(110, 231, 183, 0.36);
-    box-shadow: 0 0 34px rgba(16, 185, 129, 0.045);
+    border-color: rgba(248, 113, 113, 0.36);
+    box-shadow: 0 0 30px rgba(153, 27, 27, 0.07);
   }
 
   main input, main textarea, main select {
-    border-color: rgba(110, 231, 183, 0.2);
-    background-color: rgba(0, 0, 0, 0.48);
+    border-color: rgba(248, 113, 113, 0.2);
+    background-color: rgba(0, 0, 0, 0.62);
   }
-
   main input:focus, main textarea:focus, main select:focus {
-    border-color: rgba(110, 231, 183, 0.72);
-    outline: 1px solid rgba(110, 231, 183, 0.24);
+    border-color: rgba(248, 113, 113, 0.72);
+    outline: 1px solid rgba(248, 113, 113, 0.24);
   }
 
   nav.fixed {
-    border-bottom-color: rgba(110, 231, 183, 0.2);
-    background-color: rgba(2, 8, 7, 0.78);
-    box-shadow: 0 8px 36px rgba(0, 0, 0, 0.22);
+    border-bottom-color: rgba(248, 113, 113, 0.2);
+    background-color: rgba(1, 1, 3, 0.9);
+    box-shadow: 0 8px 36px rgba(0, 0, 0, 0.38);
   }
-
   footer {
-    border-top-color: rgba(110, 231, 183, 0.18);
-    background-color: rgba(2, 8, 7, 0.9);
+    border-top-color: rgba(248, 113, 113, 0.18);
+    background-color: rgba(1, 1, 3, 0.94);
   }
 
   .launch-sequence-track { --launch-line-x: 0.65rem; }
   .launch-sequence-line { position: absolute; top: 0.25rem; bottom: 0.75rem; left: var(--launch-line-x); width: 1px; background: rgba(255, 255, 255, 0.16); }
-  .launch-sequence-line-progress { position: absolute; inset: 0; transform-origin: top; background: rgba(110, 231, 183, 0.8); }
-  .launch-asteroid { position: absolute; left: 50%; width: 1.15rem; height: 1.15rem; margin: -0.575rem 0 0 -0.575rem; border-radius: 50%; background: #080808; border: 1px solid rgba(110, 231, 183, 0.8); box-shadow: 0 0 0 0.3rem rgba(52, 211, 153, 0.06), 0 0 1.25rem rgba(52, 211, 153, 0.28); transform: translateY(-50%); }
-  .launch-asteroid::before, .launch-asteroid::after { content: ''; position: absolute; width: 0.3rem; height: 0.18rem; border-radius: 50%; background: rgba(167, 243, 208, 0.65); }
+  .launch-sequence-line-progress { position: absolute; inset: 0; transform-origin: top; background: rgba(248, 113, 113, 0.8); }
+  .launch-asteroid { position: absolute; left: 50%; width: 1.15rem; height: 1.15rem; margin: -0.575rem 0 0 -0.575rem; border-radius: 50%; background: #080808; border: 1px solid rgba(248, 113, 113, 0.8); box-shadow: 0 0 0 0.3rem rgba(220, 38, 38, 0.06), 0 0 1.25rem rgba(220, 38, 38, 0.2); transform: translateY(-50%); }
+  .launch-asteroid::before, .launch-asteroid::after { content: ''; position: absolute; width: 0.3rem; height: 0.18rem; border-radius: 50%; background: rgba(252, 165, 165, 0.65); }
   .launch-asteroid::before { top: 0.2rem; left: 0.2rem; }
   .launch-asteroid::after { right: 0.15rem; bottom: 0.2rem; opacity: 0.45; }
-  .launch-asteroid span { position: absolute; right: 100%; top: 50%; width: 2.3rem; height: 1px; transform: translateY(-50%); background: linear-gradient(90deg, transparent, rgba(110, 231, 183, 0.3)); }
+  .launch-asteroid span { position: absolute; right: 100%; top: 50%; width: 2.3rem; height: 1px; transform: translateY(-50%); background: linear-gradient(90deg, transparent, rgba(248, 113, 113, 0.3)); }
 
   @media (min-width: 768px) { .launch-sequence-track { --launch-line-x: 1.15rem; } }
   @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; } }
