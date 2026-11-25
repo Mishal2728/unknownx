@@ -80,95 +80,73 @@
 }
 
 @layer base {
-  html {
-    scroll-behavior: smooth;
-  }
-  
-  * {
-    border-color: hsl(var(--border));
-  }
-  
+  html { scroll-behavior: smooth; }
+  * { border-color: hsl(var(--border)); }
+
   @media (hover: hover) and (pointer: fine) {
-    * {
-      cursor: none !important;
-    }
+    * { cursor: none !important; }
   }
 
   body {
     @apply font-sans antialiased bg-background text-foreground overflow-x-hidden;
-  }
-  
-  ::selection {
-    background: rgba(100, 150, 255, 0.3);
-  }
-
-  .launch-sequence-track {
-    --launch-line-x: 0.65rem;
+    background-image:
+      radial-gradient(ellipse at 50% 0%, rgba(12, 72, 58, 0.12), transparent 55%),
+      linear-gradient(rgba(52, 211, 153, 0.018) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(52, 211, 153, 0.018) 1px, transparent 1px);
+    background-size: auto, 56px 56px, 56px 56px;
+    background-attachment: fixed;
   }
 
-  .launch-sequence-line {
-    position: absolute;
-    top: 0.25rem;
-    bottom: 0.75rem;
-    left: var(--launch-line-x);
-    width: 1px;
-    background: rgba(255, 255, 255, 0.16);
+  ::selection { background: rgba(52, 211, 153, 0.3); }
+
+  /* A restrained terminal overlay keeps the existing void/starfield visible. */
+  main > section {
+    background-image:
+      linear-gradient(rgba(52, 211, 153, 0.018) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(52, 211, 153, 0.018) 1px, transparent 1px);
+    background-size: 48px 48px;
   }
 
-  .launch-sequence-line-progress {
-    position: absolute;
-    inset: 0;
-    transform-origin: top;
-    background: rgba(255, 255, 255, 0.8);
+  main article {
+    border-color: rgba(110, 231, 183, 0.14);
+    transition: border-color 220ms ease, background-color 220ms ease, box-shadow 220ms ease;
   }
 
-  .launch-asteroid {
-    position: absolute;
-    left: 50%;
-    width: 1.15rem;
-    height: 1.15rem;
-    margin: -0.575rem 0 0 -0.575rem;
-    border-radius: 50%;
-    background: #080808;
-    border: 1px solid rgba(255, 255, 255, 0.8);
-    box-shadow: 0 0 0 0.3rem rgba(255, 255, 255, 0.06), 0 0 1.25rem rgba(255, 255, 255, 0.28);
-    transform: translateY(-50%);
+  main article:hover {
+    border-color: rgba(110, 231, 183, 0.36);
+    box-shadow: 0 0 34px rgba(16, 185, 129, 0.045);
   }
 
-  .launch-asteroid::before,
-  .launch-asteroid::after {
-    content: '';
-    position: absolute;
-    width: 0.3rem;
-    height: 0.18rem;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.65);
+  main input, main textarea, main select {
+    border-color: rgba(110, 231, 183, 0.2);
+    background-color: rgba(0, 0, 0, 0.48);
   }
 
-  .launch-asteroid::before {
-    top: 0.2rem;
-    left: 0.2rem;
+  main input:focus, main textarea:focus, main select:focus {
+    border-color: rgba(110, 231, 183, 0.72);
+    outline: 1px solid rgba(110, 231, 183, 0.24);
   }
 
-  .launch-asteroid::after {
-    right: 0.15rem;
-    bottom: 0.2rem;
-    opacity: 0.45;
+  nav.fixed {
+    border-bottom-color: rgba(110, 231, 183, 0.2);
+    background-color: rgba(2, 8, 7, 0.78);
+    box-shadow: 0 8px 36px rgba(0, 0, 0, 0.22);
   }
 
-  .launch-asteroid span {
-    position: absolute;
-    right: 100%;
-    top: 50%;
-    width: 2.3rem;
-    height: 1px;
-    transform: translateY(-50%);
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3));
+  footer {
+    border-top-color: rgba(110, 231, 183, 0.18);
+    background-color: rgba(2, 8, 7, 0.9);
   }
 
-  @media (min-width: 768px) {
-    .launch-sequence-track {
-      --launch-line-x: 1.15rem;
-    }
-  }
+  .launch-sequence-track { --launch-line-x: 0.65rem; }
+  .launch-sequence-line { position: absolute; top: 0.25rem; bottom: 0.75rem; left: var(--launch-line-x); width: 1px; background: rgba(255, 255, 255, 0.16); }
+  .launch-sequence-line-progress { position: absolute; inset: 0; transform-origin: top; background: rgba(110, 231, 183, 0.8); }
+  .launch-asteroid { position: absolute; left: 50%; width: 1.15rem; height: 1.15rem; margin: -0.575rem 0 0 -0.575rem; border-radius: 50%; background: #080808; border: 1px solid rgba(110, 231, 183, 0.8); box-shadow: 0 0 0 0.3rem rgba(52, 211, 153, 0.06), 0 0 1.25rem rgba(52, 211, 153, 0.28); transform: translateY(-50%); }
+  .launch-asteroid::before, .launch-asteroid::after { content: ''; position: absolute; width: 0.3rem; height: 0.18rem; border-radius: 50%; background: rgba(167, 243, 208, 0.65); }
+  .launch-asteroid::before { top: 0.2rem; left: 0.2rem; }
+  .launch-asteroid::after { right: 0.15rem; bottom: 0.2rem; opacity: 0.45; }
+  .launch-asteroid span { position: absolute; right: 100%; top: 50%; width: 2.3rem; height: 1px; transform: translateY(-50%); background: linear-gradient(90deg, transparent, rgba(110, 231, 183, 0.3)); }
+
+  @media (min-width: 768px) { .launch-sequence-track { --launch-line-x: 1.15rem; } }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; } }
 }
