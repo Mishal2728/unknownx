@@ -1,7 +1,6 @@
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useRef } from 'react';
-import { ArrowRight, Code, Cpu, Globe, LockKeyhole, Network, Rocket, Server, Shield, ShieldCheck, Terminal, Workflow, Zap } from 'lucide-react';
-
+import { ArrowRight, Code, Cpu, Globe, Rocket, Shield, Zap, LockKeyhole, Network, Server, ShieldCheck, Terminal, Workflow } from 'lucide-react';
 import { CursorDot } from '@/components/CursorDot';
 import { FadeIn } from '@/components/FadeIn';
 import { Navigation } from '@/components/Navigation';
