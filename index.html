@@ -2,25 +2,29 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: blob:; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'" />
-    <meta name="theme-color" content="#050908" />
-    <title>Tonrax — Private Digital Infrastructure</title>
-    <link rel="icon" href="/src/pages/logo/64x64nb.png" type="image/png" />
-    <meta name="description" content="Privacy-minded hosting, private servers and networks, and business software designed around control, security, and clear trade-offs." />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: blob:; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:" />
+    <title>Tonrax</title>
+    <link rel="icon" href="src/pages/logo/64x64nb.png" type="image/png" />
+    <meta name="description" content="Tonrax — Web Development & Hosting Solutions" />
     <meta name="robots" content="index, follow" />
-    <meta property="og:title" content="Tonrax — Private Digital Infrastructure" />
-    <meta property="og:description" content="Hosting, private connectivity, and software solutions for businesses that value control and privacy." />
+    <meta property="og:title" content="Tonrax — Web Development & Hosting Solutions" />
+    <meta property="og:description" content="Tonrax — Web Development & Hosting Solutions" />
     <meta property="og:type" content="website" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Tonrax — Private Digital Infrastructure" />
-    <meta name="twitter:description" content="Privacy-minded infrastructure and software for business." />
+    <meta name="twitter:title" content="Tonrax — Web Development & Hosting Solutions" />
+    <meta name="twitter:description" content="Tonrax — Web Development & Hosting Solutions" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@300;400;500;700;800&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
   </head>
   <body>
     <div id="root"></div>
+    <div id="file-guide" hidden>
+      <div class="guide-card"><div class="guide-kicker">Tonrax — Web Development & Hosting Solutions</div><h1>Tonrax</h1><p>Web Development & Hosting Solutions</p><button onclick="window.location.href='START-WEBSITE.bat'">Start website automatically</button><p class="guide-small">If Windows blocks the button, double-click <strong>START-WEBSITE.bat</strong>.</p></div>
+    </div>
+    <style>#file-guide[hidden]{display:none}#file-guide{min-height:100vh;display:grid;place-items:center;padding:24px;color:#f7f7f8;background:#020203;font-family:Arial,sans-serif}.guide-card{width:min(560px,100%);padding:42px;border:1px solid #25252a;background:rgba(255,255,255,.035)}.guide-kicker{color:#8db5ff;font:11px monospace}.guide-card h1{font-size:58px}.guide-card button{padding:15px 20px;background:#fff;border:0}</style>
+    <script>if(window.location.protocol==='file:'){document.getElementById('file-guide').hidden=false}</script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
