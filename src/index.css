@@ -27,7 +27,7 @@
   --color-accent: hsl(var(--accent));
   --color-accent-foreground: hsl(var(--accent-foreground));
   --color-destructive: hsl(var(--destructive));
-  --color-destructive-foreground: hsl(var(--destructive-foreground));
+  --color-destructive-foreground: hsl(var(--foreground));
 }
 
 :root {
@@ -89,7 +89,7 @@
     text-shadow: 0 0 22px rgba(153, 27, 27, 0.16);
   }
 
-  /* 1.5-second violent signal break on every route, repeated every 10 seconds. */
+  /* 1.5-second global signal glitch every 10 seconds, with no text overlay. */
   body::after {
     content: '';
     position: fixed;
@@ -98,40 +98,44 @@
     pointer-events: none;
     opacity: 0;
     background:
-      repeating-linear-gradient(to bottom, transparent 0 3px, rgba(255,255,255,.15) 4px, transparent 5px),
-      linear-gradient(90deg, rgba(255,0,48,.38), transparent 14%, transparent 86%, rgba(255,255,255,.16));
+      repeating-linear-gradient(to bottom, transparent 0 2px, rgba(255,255,255,.22) 3px, transparent 4px),
+      repeating-linear-gradient(90deg, transparent 0 17%, rgba(255,0,48,.3) 17.1% 17.8%, transparent 18% 63%, rgba(255,255,255,.13) 63.2% 63.7%, transparent 64%),
+      linear-gradient(90deg, rgba(255,0,48,.3), transparent 12%, transparent 84%, rgba(255,255,255,.2));
     animation: global-signal-break 10s infinite;
   }
-
   main {
     animation: global-signal-shake 10s infinite;
     transform-origin: center top;
   }
 
   @keyframes global-signal-break {
-    0%, 85%, 100% { opacity: 0; transform: translate3d(0,0,0) scale(1); clip-path: inset(0 0 100% 0); }
-    85.1% { opacity: 1; transform: translate3d(-18px,0,0) scale(1.02); clip-path: inset(4% 0 74% 0); }
-    85.35% { opacity: .45; transform: translate3d(22px,2px,0) scale(1.015); clip-path: inset(28% 0 52% 0); }
-    85.6% { opacity: 1; transform: translate3d(-26px,-3px,0) scale(1.025); clip-path: inset(42% 0 34% 0); }
-    85.85% { opacity: .6; transform: translate3d(18px,3px,0) scale(1.018); clip-path: inset(62% 0 17% 0); }
-    86.15% { opacity: 1; transform: translate3d(-14px,-2px,0) scale(1.02); clip-path: inset(15% 0 68% 0); }
-    86.5% { opacity: .75; transform: translate3d(12px,2px,0) scale(1.012); clip-path: inset(52% 0 26% 0); }
-    86.85% { opacity: .9; transform: translate3d(-8px,-1px,0) scale(1.008); clip-path: inset(76% 0 8% 0); }
-    87.35% { opacity: .45; transform: translate3d(5px,1px,0) scale(1.004); clip-path: inset(22% 0 58% 0); }
-    88.5% { opacity: 0; transform: translate3d(0,0,0) scale(1); clip-path: inset(0 0 100% 0); }
+    0%, 85%, 100% { opacity: 0; transform: translate3d(0,0,0) scale(1); clip-path: inset(0 0 100% 0); filter: none; }
+    85.08% { opacity: 1; transform: translate3d(-22px,1px,0) scale(1.025); clip-path: inset(3% 0 73% 0); filter: contrast(2); }
+    85.25% { opacity: .38; transform: translate3d(26px,-3px,0) scale(1.018); clip-path: inset(28% 0 50% 0); filter: hue-rotate(35deg) contrast(1.8); }
+    85.42% { opacity: 1; transform: translate3d(-30px,4px,0) scale(1.03); clip-path: inset(42% 0 32% 0); filter: contrast(2.2); }
+    85.6% { opacity: .48; transform: translate3d(24px,-2px,0) scale(1.02); clip-path: inset(64% 0 14% 0); filter: hue-rotate(-30deg) contrast(1.7); }
+    85.78% { opacity: 1; transform: translate3d(-19px,3px,0) scale(1.025); clip-path: inset(14% 0 67% 0); filter: contrast(2); }
+    86.05% { opacity: .7; transform: translate3d(16px,-2px,0) scale(1.016); clip-path: inset(52% 0 25% 0); filter: contrast(1.7); }
+    86.35% { opacity: 1; transform: translate3d(-12px,1px,0) scale(1.012); clip-path: inset(76% 0 7% 0); filter: contrast(1.5); }
+    86.7% { opacity: .55; transform: translate3d(8px,0,0) scale(1.008); clip-path: inset(21% 0 58% 0); filter: none; }
+    87.1% { opacity: .85; transform: translate3d(-5px,0,0) scale(1.004); clip-path: inset(38% 0 44% 0); }
+    87.7% { opacity: .3; transform: translate3d(3px,0,0) scale(1.002); clip-path: inset(59% 0 22% 0); }
+    88.4% { opacity: 0; transform: translate3d(0,0,0) scale(1); clip-path: inset(0 0 100% 0); filter: none; }
   }
 
   @keyframes global-signal-shake {
     0%, 85%, 100% { transform: translate3d(0,0,0) skewX(0) scale(1); filter: none; }
-    85.1% { transform: translate3d(-22px,4px,0) skewX(-1deg) scale(1.012); filter: contrast(1.8) saturate(.35); }
-    85.35% { transform: translate3d(24px,-5px,0) skewX(1.1deg) scale(1.018); filter: contrast(2) saturate(.25); }
-    85.6% { transform: translate3d(-18px,3px,0) skewX(-.75deg) scale(1.015); filter: contrast(1.65) saturate(.4); }
-    85.85% { transform: translate3d(16px,-3px,0) skewX(.65deg) scale(1.012); filter: contrast(1.55) saturate(.5); }
-    86.15% { transform: translate3d(-12px,2px,0) skewX(-.4deg) scale(1.008); filter: contrast(1.35); }
-    86.5% { transform: translate3d(9px,-1px,0) skewX(.32deg) scale(1.006); filter: contrast(1.25); }
-    87% { transform: translate3d(-6px,1px,0) skewX(-.18deg) scale(1.003); filter: contrast(1.12); }
-    87.8% { transform: translate3d(3px,0,0) skewX(.08deg); filter: none; }
-    88.5% { transform: translate3d(0,0,0) skewX(0) scale(1); filter: none; }
+    85.08% { transform: translate3d(-26px,5px,0) skewX(-1.1deg) scale(1.02); filter: contrast(1.9) saturate(.25); }
+    85.25% { transform: translate3d(29px,-6px,0) skewX(1.2deg) scale(1.025); filter: contrast(2.2) saturate(.2); }
+    85.42% { transform: translate3d(-23px,4px,0) skewX(-.9deg) scale(1.02); filter: contrast(1.8) saturate(.35); }
+    85.6% { transform: translate3d(20px,-4px,0) skewX(.8deg) scale(1.018); filter: contrast(1.9) saturate(.25); }
+    85.78% { transform: translate3d(-17px,3px,0) skewX(-.65deg) scale(1.016); filter: contrast(1.7); }
+    86.05% { transform: translate3d(14px,-3px,0) skewX(.5deg) scale(1.012); filter: contrast(1.55); }
+    86.35% { transform: translate3d(-10px,2px,0) skewX(-.35deg) scale(1.009); filter: contrast(1.4); }
+    86.7% { transform: translate3d(7px,-1px,0) skewX(.22deg) scale(1.006); filter: contrast(1.25); }
+    87.1% { transform: translate3d(-4px,1px,0) skewX(-.12deg) scale(1.003); filter: contrast(1.1); }
+    87.7% { transform: translate3d(2px,0,0) skewX(.05deg); filter: none; }
+    88.4% { transform: translate3d(0,0,0) skewX(0) scale(1); filter: none; }
   }
 
   main article { border-color: rgba(248, 113, 113, 0.14); transition: border-color 220ms ease, background-color 220ms ease, box-shadow 220ms ease; }
