@@ -92,7 +92,7 @@ export function ServiceRack({
                   onMouseEnter={() => setActive(i)}
                   onFocus={() => setActive(i)}
                   onClick={() => setActive(i)}
-                  className={`rack-unit ${on ? 'on' : ''} group flex w-full items-center gap-3 border bg-gradient-to-r from-[#0a110e] to-[#060a08] px-3 py-2.5 text-left ${
+                  className={`rack-unit ${on ? 'on' : ''} group flex w-full touch-manipulation items-center gap-3 border bg-gradient-to-r from-[#0a110e] to-[#060a08] px-3 py-2.5 text-left ${
                     on
                       ? 'border-emerald-300/70 shadow-[0_0_26px_rgba(16,185,129,0.4)]'
                       : 'border-emerald-300/15 hover:border-emerald-300/40'
@@ -169,7 +169,7 @@ export function ServiceRack({
         ) : (
           <div className="flex flex-1 flex-col justify-center font-mono text-xs leading-relaxed text-emerald-100/45">
             <p className="mb-2 text-emerald-300/70">RACK-01 // {n} {ru ? 'ЮНИТОВ' : 'UNITS'}</p>
-            <p>{ru ? 'Наведите на юнит для просмотра сервиса.' : 'Hover a rack unit to inspect a service.'}</p>
+            <p>{ru ? 'Наведите или нажмите на юнит для просмотра сервиса.' : 'Hover or tap a rack unit to inspect a service.'}</p>
           </div>
         )}
 

@@ -84,6 +84,7 @@
 @layer base {
   * { border-color: hsl(var(--border)); }
   body { @apply font-sans antialiased bg-background text-foreground overflow-x-clip; background-color: #010103; }
+  a, button, [role='button'], .access-card, main article { -webkit-tap-highlight-color: transparent; }
   ::selection { background: rgba(100, 150, 255, 0.3); }
 
   main > section h2 {
@@ -141,7 +142,7 @@
   }
 
   main article { border-color: rgba(248, 113, 113, 0.14); transition: border-color 220ms ease, background-color 220ms ease, box-shadow 220ms ease; }
-  main article:hover { border-color: rgba(248, 113, 113, 0.36); box-shadow: 0 0 30px rgba(153, 27, 27, 0.07); }
+  main article:hover, main article:active { border-color: rgba(248, 113, 113, 0.36); box-shadow: 0 0 30px rgba(153, 27, 27, 0.07); }
   main input, main textarea, main select { border-color: rgba(248, 113, 113, 0.2); background-color: rgba(0, 0, 0, 0.62); }
   main input:focus, main textarea:focus, main select:focus { border-color: rgba(248, 113, 113, 0.72); outline: 1px solid rgba(248, 113, 113, 0.24); }
 
@@ -224,7 +225,8 @@ select:focus-visible {
   pointer-events: none;
   z-index: 1;
 }
-.edge-gradient:hover::before { opacity: 1; }
+.edge-gradient:hover::before,
+.edge-gradient:active::before { opacity: 1; }
 
 /* --- Card sheen sweep + inner highlight on hover -------------------- */
 main article { position: relative; overflow: hidden; }
@@ -241,7 +243,8 @@ main article::after {
   opacity: 0;
   transition: opacity 240ms ease;
 }
-main article:hover::after {
+main article:hover::after,
+main article:active::after {
   opacity: 1;
   animation: card-sheen 820ms ease-out;
 }
@@ -260,7 +263,8 @@ main article:hover::after {
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
   transition: border-color 260ms ease, box-shadow 260ms ease, transform 260ms ease, color 260ms ease;
 }
-.group:hover .icon-tile {
+.group:hover .icon-tile,
+.group:active .icon-tile {
   border-color: rgba(248, 113, 113, 0.55);
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 0 22px rgba(220, 38, 38, 0.18);
   transform: translateY(-2px);
@@ -278,7 +282,8 @@ main article:hover::after {
 }
 .btn-cta:active { transform: translateY(0); }
 .btn-cta svg { transition: transform 260ms ease; }
-.btn-cta:hover svg { transform: translateX(4px); }
+.btn-cta:hover svg,
+.btn-cta:active svg { transform: translateX(4px); }
 
 /* --- Animated terminal-style nav underline -------------------------- */
 .nav-link { position: relative; }
@@ -294,7 +299,8 @@ main article:hover::after {
   transform-origin: left;
   transition: transform 300ms cubic-bezier(0.16, 1, 0.3, 1);
 }
-.nav-link:hover::after { transform: scaleX(1); }
+.nav-link:hover::after,
+.nav-link:active::after { transform: scaleX(1); }
 .nav-link[data-active='true']::after { transform: scaleX(1); }
 
 /* --- Reveal helper for non-FadeIn elements -------------------------- */
@@ -392,7 +398,8 @@ main [class*='rounded'] { border-radius: 0 !important; }
   pointer-events: none;
   background: #010103;
 }
-.bi-glitch:hover::before {
+.bi-glitch:hover::before,
+.bi-glitch:active::before {
   opacity: 0.9;
   color: #ff2d2d;
   left: 2px;
@@ -400,7 +407,8 @@ main [class*='rounded'] { border-radius: 0 !important; }
   clip-path: inset(0 0 55% 0);
   animation: bi-gl-top 0.42s steps(2) infinite;
 }
-.bi-glitch:hover::after {
+.bi-glitch:hover::after,
+.bi-glitch:active::after {
   opacity: 0.9;
   color: #ffffff;
   left: -2px;
@@ -424,7 +432,8 @@ main article {
   box-shadow: 6px 6px 0 rgba(220, 38, 38, 0.14);
   transition: transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease, background-color 200ms ease !important;
 }
-main article:hover {
+main article:hover,
+main article:active {
   transform: translate(-3px, -3px);
   box-shadow: 10px 10px 0 rgba(220, 38, 38, 0.3) !important;
   border-color: rgba(248, 113, 113, 0.6) !important;
@@ -474,6 +483,12 @@ main article::before {
   box-shadow: 7px 7px 0 rgba(220, 38, 38, 0.45) !important;
 }
 .btn-cta:active { transform: translate(0, 0); box-shadow: 2px 2px 0 rgba(220,38,38,0.4) !important; }
+@media (hover: none) {
+  .btn-cta:active {
+    transform: translate(-2px, -2px);
+    box-shadow: 7px 7px 0 rgba(220, 38, 38, 0.45) !important;
+  }
+}
 
 /* -- Hazard stripe divider ------------------------------------------- */
 .bi-hazard {
@@ -596,7 +611,8 @@ main article::before {
   transition: transform 180ms ease, box-shadow 180ms ease, background-color 180ms ease;
   backdrop-filter: blur(6px);
 }
-.term-launcher:hover { transform: translate(-2px, -2px); box-shadow: 7px 7px 0 rgba(220, 38, 38, 0.45); background: rgba(10, 10, 12, 0.95); }
+.term-launcher:hover,
+.term-launcher:active { transform: translate(-2px, -2px); box-shadow: 7px 7px 0 rgba(220, 38, 38, 0.45); background: rgba(10, 10, 12, 0.95); }
 
 .term-panel {
   position: fixed;
@@ -811,7 +827,8 @@ main h1, main h2, main h3 { letter-spacing: 0.01em; }
 
 /* Access-grant recruiting: card expands + stamp PUNCHES down on hover */
 .access-card { transform: scale(1); }
-.access-card:hover {
+.access-card:hover,
+.access-card:active {
   animation: card-punch 0.42s cubic-bezier(0.2, 1.4, 0.35, 1) forwards;
   z-index: 5;
 }
@@ -827,7 +844,8 @@ main h1, main h2, main h3 { letter-spacing: 0.01em; }
   transform: rotate(-12deg) scale(2.3);
   transform-origin: center;
 }
-.access-card:hover .access-stamp {
+.access-card:hover .access-stamp,
+.access-card:active .access-stamp {
   animation: stamp-in 0.4s cubic-bezier(0.2, 1.6, 0.3, 1) forwards;
 }
 @keyframes stamp-in {
@@ -849,7 +867,8 @@ main h1, main h2, main h3 { letter-spacing: 0.01em; }
   opacity: 0;
   pointer-events: none;
 }
-.access-card:hover .access-ring {
+.access-card:hover .access-ring,
+.access-card:active .access-ring {
   animation: ring-burst 0.5s ease-out 0.14s forwards;
 }
 @keyframes ring-burst {
@@ -938,7 +957,8 @@ main h1, main h2, main h3 { letter-spacing: 0.01em; }
   cursor: pointer;
   transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
-.tier-slider::-webkit-slider-thumb:hover { transform: scale(1.12); box-shadow: 0 0 22px rgba(220, 38, 38, 0.6); }
+.tier-slider::-webkit-slider-thumb:hover,
+.tier-slider::-webkit-slider-thumb:active { transform: scale(1.12); box-shadow: 0 0 22px rgba(220, 38, 38, 0.6); }
 .tier-slider::-moz-range-thumb {
   width: 22px;
   height: 22px;
@@ -971,7 +991,8 @@ main h1, main h2, main h3 { letter-spacing: 0.01em; }
   transform: rotateX(4deg) rotateY(-19deg);
   transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
-.rack-3d:hover { transform: rotateX(3deg) rotateY(-12deg); }
+.rack-3d:hover,
+.rack-3d:active { transform: rotateX(3deg) rotateY(-12deg); }
 .rack-unit {
   transform-style: preserve-3d;
   transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease, background-color 0.35s ease;

@@ -84,6 +84,7 @@ export function OrbitalSystems({
                 dragMomentum={false}
                 whileDrag={{ scale: 1.04, zIndex: 50 }}
                 whileHover={{ zIndex: 40 }}
+                whileTap={{ scale: 1.02, zIndex: 50 }}
                 className={`relative z-10 w-full max-w-[300px] cursor-grab touch-none active:cursor-grabbing ${messyClass}`}
               >
                 <motion.div
