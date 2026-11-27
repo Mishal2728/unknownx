@@ -129,11 +129,18 @@ export function Starfield() {
     };
 
     resize();
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     window.addEventListener('scroll', handleScroll, { passive: true });
     window.addEventListener('mousemove', handleMouseMove, { passive: true });
     window.addEventListener('resize', handleResize, { passive: true });
     document.addEventListener('visibilitychange', handleVisibility);
-    animationFrameId = requestAnimationFrame(render);
+    if (reducedMotion) {
+      render();
+      paused = true;
+      cancelAnimationFrame(animationFrameId);
+    } else {
+      animationFrameId = requestAnimationFrame(render);
+    }
 
     return () => {
       cancelAnimationFrame(animationFrameId);

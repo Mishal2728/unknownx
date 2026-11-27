@@ -1,10 +1,15 @@
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { useRef } from 'react';
+import { Link } from 'wouter';
 import { ArrowRight, Code, Cpu, Globe, Rocket, Shield, Zap, LockKeyhole, Network, Server, ShieldCheck, Terminal, Workflow } from 'lucide-react';
 import { CursorDot } from '@/components/CursorDot';
 import { FadeIn } from '@/components/FadeIn';
 import { Navigation } from '@/components/Navigation';
 import { Starfield } from '@/components/Starfield';
+import { Prompt, AsciiRule, GlitchText } from '@/components/BlackIce';
+import { ServiceRack } from '@/components/ServiceRack';
+import { CapabilitiesScroll } from '@/components/CapabilitiesScroll';
+import { LaunchGauge } from '@/components/LaunchGauge';
+import { OrbitalSystems } from '@/components/OrbitalSystems';
 import { useLanguage } from '@/context/LanguageContext';
 
 const terminalServices = [
@@ -21,9 +26,6 @@ export default function Home() {
   const { scrollYProgress } = useScroll();
   const heroOpacity = useTransform(scrollYProgress, [0, 0.1], [1, 0]);
   const heroY = useTransform(scrollYProgress, [0, 0.1], [0, 100]);
-  const sequenceRef = useRef<HTMLElement>(null);
-  const { scrollYProgress: sequenceProgress } = useScroll({ target: sequenceRef, offset: ['start 75%', 'end 25%'] });
-  const asteroidY = useTransform(sequenceProgress, [0, 1], ['0%', '100%']);
   const ru = language === 'ru';
 
   const copy = ru ? {
@@ -62,46 +64,87 @@ export default function Home() {
         <section className="relative flex h-[100dvh] flex-col items-center justify-center px-4 text-center">
           <motion.div style={{ opacity: heroOpacity, y: heroY }} className="mx-auto mt-20 max-w-5xl">
             <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}>
-              <div className="mb-6 font-mono text-sm uppercase tracking-[0.3em] text-orange-400 md:text-base">{copy.eyebrow}</div>
-              <h1 className="mb-8 text-6xl font-bold leading-[0.85] tracking-tighter md:text-8xl lg:text-9xl">{copy.title}<br /><span className="bg-gradient-to-r from-white via-gray-300 to-gray-600 bg-clip-text text-transparent">{copy.highlight}</span></h1>
-              <p className="mx-auto mb-12 max-w-2xl font-serif text-lg leading-relaxed text-gray-400 md:text-xl">{copy.description}</p>
-              <a href="/contact" className="inline-flex items-center gap-3 rounded-full border border-white/20 px-8 py-4 font-mono text-sm uppercase tracking-widest transition-colors hover:bg-orange-300 hover:text-black">{copy.cta}<ArrowRight className="h-4 w-4" /></a>
+              <div className="mb-6 flex flex-col items-center gap-3"><Prompt cmd="./tonrax --init" /><div className="font-mono text-sm uppercase tracking-[0.3em] text-orange-400 md:text-base">{copy.eyebrow}</div></div>
+              <h1 className="text-hero-sm mb-8 font-bold"><GlitchText>{copy.title}</GlitchText><br /><span className="bg-gradient-to-r from-white via-gray-300 to-gray-600 bg-clip-text text-transparent">{copy.highlight}</span></h1>
+              <p className="measure font-dot normal-case mx-auto mb-12 text-sm leading-relaxed text-gray-400 md:text-base">{copy.description}</p>
+              <Link href="/contact" className="btn-cta inline-flex items-center gap-3 rounded-full border border-white/20 px-8 py-4 font-mono text-sm uppercase tracking-widest hover:bg-orange-300 hover:text-black">{copy.cta}<ArrowRight className="h-4 w-4" /></Link>
             </motion.div>
           </motion.div>
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2, duration: 1 }} className="absolute bottom-10 left-1/2 flex -translate-x-1/2 flex-col items-center gap-3" aria-hidden="true"><span className="h-12 w-px bg-gradient-to-b from-gray-500 to-transparent" /></motion.div>
         </section>
 
         <section id="systems" className="border-y border-emerald-400/20 bg-[#030706]/95 py-20 backdrop-blur-md md:py-28">
-          <div className="mx-auto max-w-7xl px-6 md:px-12">
-            <FadeIn><div className="mb-4 flex items-center gap-3 font-mono text-[10px] uppercase tracking-[.2em] text-emerald-300"><Terminal className="h-4 w-4" />{copy.terminalEyebrow}</div><h2 className="max-w-4xl text-4xl font-bold tracking-tight md:text-6xl">{copy.terminalTitle}</h2><p className="mt-5 max-w-3xl font-serif text-lg leading-relaxed text-gray-400">{copy.terminalIntro}</p></FadeIn>
-            <FadeIn delay={0.1}><div className="mt-10 overflow-hidden border border-emerald-300/25 bg-black/90 shadow-[0_0_70px_rgba(16,185,129,.08)]"><div className="flex items-center justify-between border-b border-emerald-300/15 bg-emerald-300/[.04] px-4 py-3"><div className="flex items-center gap-2" aria-hidden="true"><i className="h-2.5 w-2.5 rounded-full bg-red-400/80" /><i className="h-2.5 w-2.5 rounded-full bg-yellow-300/80" /><i className="h-2.5 w-2.5 rounded-full bg-emerald-300/80" /></div><span className="font-mono text-[9px] uppercase tracking-[.18em] text-emerald-100/50">TONRAX / SERVICE CONSOLE</span><span className="w-10" /></div><div className="p-5 sm:p-8"><div className="mb-7 font-mono text-xs leading-relaxed text-emerald-200 sm:text-sm"><span className="text-emerald-400">{copy.terminalPrompt}</span><br /><span className="text-emerald-100/50">{ru ? 'Загрузка каталога сервисов...' : 'Loading service catalog...'}</span></div><div className="grid gap-px border border-emerald-300/10 bg-emerald-300/10 md:grid-cols-2 lg:grid-cols-3">{terminalServices.map(({ id, icon: Icon, command, title, text }) => <article key={id} className="group bg-[#050908] p-5 transition-colors hover:bg-emerald-300/[.04] sm:p-6"><div className="mb-5 flex items-center justify-between"><span className="font-mono text-[10px] tracking-widest text-emerald-300/60">[{id}]</span><Icon className="h-4 w-4 text-emerald-300/70 transition-colors group-hover:text-emerald-200" /></div><div className="mb-3 break-all font-mono text-[10px] text-emerald-300 sm:text-xs"><span className="text-emerald-100/40">$ </span>{command}</div><h3 className="mb-3 text-lg font-semibold text-white">{title[language]}</h3><p className="text-sm leading-relaxed text-gray-400">{text[language]}</p></article>)}</div><div className="mt-6 flex items-start gap-3 border-t border-emerald-300/10 pt-5 font-mono text-[10px] leading-relaxed text-emerald-100/50"><ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-emerald-300/70" />{copy.terminalNote}</div><a href="/services" className="mt-7 inline-flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-emerald-200 transition-colors hover:text-white">{ru ? 'Открыть полный каталог услуг' : 'Open the full service catalog'}<ArrowRight className="h-4 w-4" /></a></div></div></FadeIn>
+          <div className="mx-auto max-w-[1600px] px-6 md:px-12">
+            <FadeIn><div className="mb-4 flex items-center gap-3 font-mono text-[10px] uppercase tracking-[.2em] text-emerald-300"><Terminal className="h-4 w-4" />{copy.terminalEyebrow}</div><h2 className="text-fluid-h2 max-w-4xl font-bold tracking-tight"><GlitchText>{copy.terminalTitle}</GlitchText></h2><p className="measure mt-5 font-serif text-lg leading-relaxed text-gray-400">{copy.terminalIntro}</p></FadeIn>
+            <FadeIn delay={0.1}><ServiceRack services={terminalServices} language={language} ru={ru} copy={{ terminalNote: copy.terminalNote }} /></FadeIn>
           </div>
         </section>
 
-        <section className="mx-auto max-w-7xl px-6 py-32 md:px-20 md:py-48"><div className="grid items-center gap-16 md:grid-cols-2"><FadeIn><h2 className="text-4xl font-bold tracking-tight md:text-6xl">{copy.introTitle}</h2></FadeIn><FadeIn delay={0.2}><div className="space-y-6 font-serif text-xl leading-relaxed text-gray-400 md:text-2xl"><p>{copy.introP1}</p><p>{copy.introP2}</p></div></FadeIn></div></section>
+        <section className="mx-auto max-w-[1600px] px-6 py-32 md:px-12 md:py-48"><div className="grid items-center gap-16 md:grid-cols-2"><FadeIn><h2 className="text-fluid-h2 font-bold tracking-tight">{copy.introTitle}</h2></FadeIn><FadeIn delay={0.2}><div className="measure space-y-6 font-serif text-xl leading-relaxed text-gray-400 md:text-2xl"><p>{copy.introP1}</p><p>{copy.introP2}</p></div></FadeIn></div></section>
 
-        <section id="services" className="border-t border-white/5 bg-black/50 py-32 backdrop-blur-md"><div className="mx-auto max-w-7xl px-6 md:px-20"><FadeIn><div className="mb-5 font-mono text-sm uppercase tracking-widest text-orange-400">{copy.capabilities}</div><h2 className="mb-5 max-w-4xl text-4xl font-bold tracking-tight md:text-6xl">{copy.capabilityTitle}</h2><p className="mb-16 max-w-3xl font-serif text-lg leading-relaxed text-gray-400">{copy.capabilityIntro}</p></FadeIn><div className="grid gap-8 md:grid-cols-2 xl:grid-cols-3">{capabilityCards.map((item, i) => <FadeIn key={item.title} delay={i * 0.08}><article className="group relative h-full overflow-hidden border border-white/10 bg-white/[0.02] p-8 transition-colors hover:bg-white/[0.05]"><div className="absolute right-0 top-0 h-32 w-32 rounded-full bg-orange-500/10 blur-3xl transition-all duration-700 group-hover:bg-blue-400/20" /><div className="relative"><div className="mb-6 text-gray-500 transition-colors group-hover:text-orange-400">{item.icon}</div><h3 className="mb-4 text-2xl font-bold">{item.title}</h3><p className="font-serif leading-relaxed text-gray-400">{item.text}</p></div></article></FadeIn>)}</div></div></section>
+        <CapabilitiesScroll cards={capabilityCards} eyebrow={copy.capabilities} title={copy.capabilityTitle} intro={copy.capabilityIntro} />
 
-        <section id="hosting" className="relative overflow-hidden px-6 py-32 md:px-20 md:py-48"><div className="pointer-events-none absolute left-1/2 top-1/2 h-[800px] w-[800px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-blue-900/20 blur-[120px]" /><div className="relative z-10 mx-auto grid max-w-7xl items-center gap-20 lg:grid-cols-2"><div><FadeIn><div className="mb-6 font-mono text-sm uppercase tracking-widest text-orange-400">{copy.infra}</div><h2 className="mb-8 text-5xl font-bold tracking-tight md:text-7xl">{copy.hostingTitle}</h2><p className="mb-10 font-serif text-xl leading-relaxed text-gray-400">{copy.hostingText}</p><ul className="space-y-4 font-mono text-xs tracking-wide text-gray-300 sm:text-sm">{copy.hostingPoints.map((point) => <li key={point} className="flex items-start gap-3"><Shield className="mt-0.5 h-4 w-4 shrink-0 text-orange-400" />{point}</li>)}</ul></FadeIn></div><FadeIn delay={0.3}><div className="border border-white/10 bg-black/70 p-6 font-mono shadow-[0_0_60px_rgba(59,130,246,.08)] sm:p-8"><div className="mb-6 flex items-center justify-between border-b border-white/10 pb-4"><span className="text-xs uppercase tracking-[.18em] text-gray-400">{ru ? 'Панель инфраструктуры' : 'Infrastructure stack'}</span><span className="flex items-center gap-2 text-[10px] uppercase text-emerald-300"><i className="h-2 w-2 animate-pulse rounded-full bg-emerald-400" />{ru ? 'Проектируется' : 'Scoped per project'}</span></div><div className="space-y-4">{[
+        <section id="hosting" className="relative overflow-hidden px-6 py-32 md:px-12 md:py-48"><div className="pointer-events-none absolute left-1/2 top-1/2 h-[800px] w-[800px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-blue-900/20 blur-[120px]" /><div className="relative z-10 mx-auto grid max-w-[1600px] items-center gap-20 lg:grid-cols-2"><div><FadeIn><div className="mb-6 flex items-center gap-4"><Prompt cmd="./infra --status" /><span className="font-mono text-[10px] uppercase tracking-widest text-orange-400/60">{copy.infra}</span></div><h2 className="text-fluid-h2-lg mb-8 font-bold tracking-tight"><GlitchText>{copy.hostingTitle}</GlitchText></h2><p className="measure mb-10 font-serif text-xl leading-relaxed text-gray-400">{copy.hostingText}</p><ul className="space-y-4 font-mono text-xs tracking-wide text-gray-300 sm:text-sm">{copy.hostingPoints.map((point) => <li key={point} className="flex items-start gap-3"><Shield className="mt-0.5 h-4 w-4 shrink-0 text-orange-400" />{point}</li>)}</ul></FadeIn></div><FadeIn delay={0.3}><div className="border border-white/10 bg-black/70 p-6 font-mono shadow-[0_0_60px_rgba(59,130,246,.08)] sm:p-8"><div className="mb-6 flex items-center justify-between border-b border-white/10 pb-4"><span className="text-xs uppercase tracking-[.18em] text-gray-400">{ru ? 'Панель инфраструктуры' : 'Infrastructure stack'}</span><span className="flex items-center gap-2 text-[10px] uppercase text-emerald-300"><i className="h-2 w-2 animate-pulse rounded-full bg-emerald-400" />{ru ? 'Проектируется' : 'Scoped per project'}</span></div><div className="space-y-4">{[
           { icon: Globe, label: ru ? 'Onion-сервис' : 'Onion service', value: 'TOR / PRIVATE ENDPOINT' },
           { icon: Network, label: ru ? 'Криптоузел' : 'Crypto node', value: 'SELF-HOSTED / CUSTOMER CONTROL' },
           { icon: LockKeyhole, label: 'VPN / Proxy', value: 'PRIVATE CONNECTIVITY' },
           { icon: Workflow, label: ru ? 'Автоматизация' : 'Automation', value: 'APPS / INTEGRATIONS' },
         ].map(({ icon: Icon, label, value }) => <div key={label} className="flex items-center justify-between gap-4 border border-white/10 bg-white/[0.02] px-4 py-4"><span className="flex items-center gap-3 text-sm text-gray-200"><Icon className="h-4 w-4 shrink-0 text-orange-300" />{label}</span><span className="text-right text-[8px] tracking-[.12em] text-gray-500 sm:text-[10px]">{value}</span></div>)}</div><p className="mt-6 border-t border-white/10 pt-5 text-[10px] leading-relaxed text-gray-500">{ru ? 'Конкретные технологии, доступность и сопровождение согласуются в проектном предложении.' : 'Technology choices, availability, and support are defined in the project proposal.'}</p></div></FadeIn></div></section>
 
-        <section ref={sequenceRef} className="border-t border-white/5 bg-black/50 py-32 backdrop-blur-md"><div className="mx-auto max-w-7xl px-6 md:px-20"><FadeIn><div className="mb-16 font-mono text-sm uppercase tracking-widest text-orange-400">{copy.sequence}</div></FadeIn><div className="relative pl-14 md:pl-20"><div className="absolute bottom-3 left-[0.65rem] top-1 w-px bg-white/20 md:left-[1.15rem]"><motion.div className="absolute inset-0 origin-top bg-white/80" style={{ scaleY: sequenceProgress }} /><motion.div className="absolute h-4 w-4 -translate-x-1.5 rounded-full border border-white bg-black" style={{ top: asteroidY }} /></div>{[
+        <LaunchGauge ru={ru} eyebrow={copy.sequence} steps={[
           { num: 'T-MINUS 04', title: ru ? 'Изучение' : 'Discovery', text: ru ? 'Уточняем цели, аудиторию и требования.' : 'We clarify goals, audience, and requirements.' },
           { num: 'T-MINUS 03', title: ru ? 'Дизайн' : 'Design', text: ru ? 'Создаём визуальную и пользовательскую систему.' : 'We shape the visual and user experience.' },
           { num: 'T-MINUS 02', title: ru ? 'Инжиниринг' : 'Engineering', text: ru ? 'Реализуем frontend, backend и инфраструктуру.' : 'We build the frontend, backend, and infrastructure.' },
           { num: 'T-MINUS 01', title: ru ? 'Тестирование' : 'Testing', text: ru ? 'Проверяем качество, производительность и безопасность.' : 'We verify quality, performance, and security.' },
           { num: ru ? 'СТАРТ' : 'LIFTOFF', title: ru ? 'Запуск' : 'Deployment', text: ru ? 'Разворачиваем и сопровождаем результат.' : 'We deploy and support the finished system.' },
-        ].map((step, i) => <FadeIn key={step.num} delay={i * 0.1}><div className="mb-12 border-b border-white/10 pb-12"><div className="mb-4 font-mono text-sm tracking-widest text-orange-200">{step.num}</div><h3 className="mb-3 text-2xl font-bold">{step.title}</h3><p className="max-w-2xl font-serif leading-relaxed text-gray-400">{step.text}</p></div></FadeIn>)}</div></div></section>
+        ]} />
 
-        <section className="mx-auto max-w-7xl px-6 py-32 md:px-20 md:py-48"><FadeIn><div className="mb-16 font-mono text-sm uppercase tracking-widest text-orange-400">{copy.work}</div><div className="mb-20 max-w-3xl"><h2 className="mb-6 text-5xl font-bold tracking-tight md:text-7xl">{copy.workTitle}</h2><p className="font-serif text-xl leading-relaxed text-gray-400">{copy.workText}</p></div></FadeIn><div className="grid gap-px border border-white/10 bg-white/10 md:grid-cols-2">{copy.workCards.map(([code, title, desc]) => <FadeIn key={code}><article className="group relative min-h-72 overflow-hidden bg-black/70 p-8 transition-colors hover:bg-white/[0.04] md:p-10"><div className="absolute -right-12 -top-12 h-40 w-40 rounded-full border border-white/10 transition-transform duration-700 group-hover:scale-125 group-hover:border-orange-400/30" /><span className="font-mono text-[10px] tracking-[.18em] text-gray-500">{code}</span><h3 className="mb-5 mt-12 text-3xl font-bold text-orange-200 transition-colors group-hover:text-orange-400">{title}</h3><p className="max-w-lg font-serif leading-relaxed text-gray-400">{desc}</p></article></FadeIn>)}</div></section>
+        <OrbitalSystems cards={copy.workCards} eyebrow={copy.work} title={copy.workTitle} text={copy.workText} ru={ru} />
 
-        <section id="careers" className="relative overflow-hidden border-t border-white/5 bg-black/40 px-6 py-32 md:px-20 md:py-44"><div className="absolute inset-y-0 left-1/2 w-px bg-white/[0.04]" aria-hidden="true" /><div className="absolute left-1/2 top-1/2 h-[42rem] w-[42rem] -translate-x-1/2 -translate-y-1/2 rounded-full border border-white/[0.04]" aria-hidden="true" /><div className="relative mx-auto max-w-7xl"><FadeIn><div className="mb-16 font-mono text-sm uppercase tracking-widest text-orange-400">{copy.crew}</div></FadeIn><div className="grid items-center gap-16 lg:grid-cols-[1.15fr_0.85fr]"><FadeIn><div><span className="mb-8 inline-flex items-center gap-3 font-mono text-xs uppercase tracking-[0.22em] text-orange-200"><i className="h-2 w-2 animate-pulse rounded-full bg-emerald-400" />{ru ? 'Набор открыт' : 'Hiring remotely'}</span><h2 className="mb-7 text-5xl font-bold tracking-tight md:text-7xl">{ru ? 'Стройте из любой точки.' : 'Build from any orbit.'}</h2><p className="max-w-xl font-serif text-xl leading-relaxed text-gray-400">{ru ? 'Мы ищем внимательных удалённых специалистов, которым важны качество и детали.' : 'We are looking for thoughtful remote builders who care about quality and detail.'}</p><a href="/apply" className="mt-10 inline-flex items-center gap-4 border-b border-white/40 pb-3 font-mono text-xs uppercase tracking-[0.2em] text-orange-200">{ru ? 'Отправить координаты' : 'Send your coordinates'}<ArrowRight className="h-4 w-4" /></a></div></FadeIn><FadeIn><div className="border border-white/10 bg-black/70 p-7 font-mono md:p-9"><div className="mb-6 flex justify-between border-b border-white/10 pb-5 text-xs text-gray-500"><span>{ru ? 'Открытые роли' : 'Open positions'}</span><span className="text-emerald-300">{ru ? 'Удалённо' : 'Remote'}</span></div>{(ru ? ['Frontend-инженер', 'Backend-инженер', 'Platform-инженер'] : ['Frontend engineer', 'Backend engineer', 'Platform engineer']).map((role) => <div key={role} className="mb-5 text-lg text-orange-200">{role}</div>)}</div></FadeIn></div></div></section>
+        <section id="careers" className="relative overflow-hidden border-t border-white/5 bg-black/40 px-6 py-32 md:px-12 md:py-44"><div className="pointer-events-none absolute left-1/2 top-1/2 h-[42rem] w-[42rem] -translate-x-1/2 -translate-y-1/2 rounded-full border border-white/[0.04]" aria-hidden="true" /><div className="relative mx-auto max-w-[1600px]"><FadeIn><div className="mb-16 flex items-center gap-4"><Prompt cmd="./crew --recruit" /><span className="font-mono text-[10px] uppercase tracking-widest text-orange-400/60">{copy.crew}</span></div></FadeIn>
+          <div className="grid items-start gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:gap-16">
+            <FadeIn>
+              <div>
+                <span className="mb-8 inline-flex items-center gap-3 font-mono text-xs uppercase tracking-[0.22em] text-orange-200"><i className="h-2 w-2 animate-pulse rounded-full bg-emerald-400" />{ru ? 'Набор открыт' : 'Hiring remotely'}</span>
+                <h2 className="text-fluid-h2-lg mb-7 font-bold tracking-tight"><GlitchText>{ru ? 'Стройте из любой точки.' : 'Build from any orbit.'}</GlitchText></h2>
+                <p className="measure font-serif text-xl leading-relaxed text-gray-400">{ru ? 'Мы ищем внимательных удалённых специалистов, которым важны качество и детали.' : 'We are looking for thoughtful remote builders who care about quality and detail.'}</p>
+                <Link href="/apply" className="btn-cta mt-10 inline-flex items-center gap-4 border-b border-white/40 pb-3 font-mono text-xs uppercase tracking-[0.2em] text-orange-200 hover:text-orange-300">{ru ? 'Отправить координаты' : 'Send your coordinates'}<ArrowRight className="h-4 w-4" /></Link>
+              </div>
+            </FadeIn>
 
-        <section className="border-t border-white/5 bg-black/50 py-32 text-center backdrop-blur-md"><FadeIn><Rocket className="mx-auto mb-6 h-8 w-8 text-orange-400" /><h2 className="mb-8 text-5xl font-bold tracking-tight text-orange-200 md:text-8xl">{ru ? 'Готовы к запуску?' : 'Ready to Launch?'}</h2><p className="mx-auto mb-12 max-w-2xl font-serif text-xl text-gray-400">{ru ? 'Давайте обсудим, как мы можем помочь вашему проекту.' : 'Let’s discuss how we can help your project.'}</p><a href="/contact" className="inline-flex items-center gap-3 rounded-full border border-white/20 px-8 py-4 font-mono text-sm uppercase tracking-widest transition-colors hover:bg-orange-300 hover:text-black">{ru ? 'Запланировать консультацию' : 'Schedule Consultation'}<ArrowRight className="h-4 w-4" /></a></FadeIn></section>
+            {/* access-grant recruiting — standalone cards, stamp-slam on hover */}
+            <FadeIn delay={0.1}>
+              <div className="grid gap-4 sm:grid-cols-2">
+                {[
+                  { icon: Code, title: ru ? 'Frontend-инженер' : 'Frontend engineer', id: 'TNX-FE-01', lvl: 'LVL-3' },
+                  { icon: Server, title: ru ? 'Backend-инженер' : 'Backend engineer', id: 'TNX-BE-02', lvl: 'LVL-4' },
+                  { icon: Cpu, title: ru ? 'Platform-инженер' : 'Platform engineer', id: 'TNX-PF-03', lvl: 'LVL-5' },
+                  { icon: LockKeyhole, title: ru ? 'Открытая заявка' : 'Open application', id: 'TNX-XX-04', lvl: 'LVL-?' },
+                ].map((r) => (
+                  <Link key={r.id} href="/apply" className="access-card group relative overflow-hidden border border-emerald-300/20 bg-[#050908]/90 p-5 font-mono backdrop-blur-sm transition-colors duration-300 hover:border-orange-400/50">
+                    {/* clearance stamp — punches down on hover */}
+                    <span className="access-ring" aria-hidden="true" />
+                    <span className="access-stamp pointer-events-none absolute right-3 top-3 z-10 border-2 border-red-500/70 px-2 py-0.5 text-[9px] uppercase tracking-[0.16em] text-red-400/90">
+                      {ru ? 'допуск: ожидание' : 'clearance: pending'}
+                    </span>
+                    <div className="mb-4 flex items-center gap-3">
+                      <span className="flex h-9 w-9 items-center justify-center border border-emerald-300/30 bg-black/50 transition-colors group-hover:border-emerald-300/70"><r.icon className="h-4 w-4 text-emerald-300/70 transition-colors group-hover:text-emerald-200" /></span>
+                      <span className="text-[9px] uppercase tracking-[0.16em] text-emerald-300/50">{ru ? 'доступ' : 'access-id'}: {r.id}</span>
+                    </div>
+                    <h3 className="mb-3 text-lg text-orange-200 transition-colors group-hover:text-orange-300">{r.title}</h3>
+                    <div className="mb-4 h-2.5 w-28 bg-emerald-300/15" aria-hidden="true" />
+                    <div className="flex items-center justify-between border-t border-emerald-300/10 pt-3 text-[9px] uppercase tracking-[0.14em]">
+                      <span className="text-emerald-300/50">{ru ? 'допуск' : 'clearance'} · {r.lvl}</span>
+                      <span className="text-emerald-300/40 transition-colors group-hover:text-emerald-300/90">{ru ? 'запросить →' : 'request access →'}</span>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </FadeIn>
+          </div>
+        </div></section>
+
+        <section className="border-t border-white/5 bg-black/50 py-32 text-center backdrop-blur-md"><div className="bi-hazard mb-20" /><FadeIn><div className="mx-auto mb-8 max-w-2xl px-6"><AsciiRule label={ru ? 'КОНЕЦ ПЕРЕДАЧИ' : 'END OF TRANSMISSION'} /></div><Rocket className="mx-auto mb-6 h-8 w-8 text-orange-400" /><h2 className="text-fluid-h1 mb-8 font-bold tracking-tight text-orange-200 text-glow-crimson"><GlitchText>{ru ? 'Готовы к запуску?' : 'Ready to Launch?'}</GlitchText></h2><p className="measure mx-auto mb-12 font-serif text-xl text-gray-400">{ru ? 'Давайте обсудим, как мы можем помочь вашему проекту.' : 'Let’s discuss how we can help your project.'}</p><Link href="/contact" className="btn-cta inline-flex items-center gap-3 rounded-full border border-white/20 px-8 py-4 font-mono text-sm uppercase tracking-widest hover:bg-orange-300 hover:text-black">{ru ? 'Запланировать консультацию' : 'Schedule Consultation'}<ArrowRight className="h-4 w-4" /></Link></FadeIn></section>
       </main>
     </div>
   );

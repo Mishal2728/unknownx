@@ -5,6 +5,7 @@ import { CursorDot } from '@/components/CursorDot';
 import { FadeIn } from '@/components/FadeIn';
 import { Navigation } from '@/components/Navigation';
 import { Starfield } from '@/components/Starfield';
+import { Prompt, GlitchText } from '@/components/BlackIce';
 import { useLanguage } from '@/context/LanguageContext';
 
 type PolicyKind = 'terms' | 'privacy';
@@ -98,11 +99,11 @@ function LegalPage({ kind }: { kind: PolicyKind }) {
       <CursorDot />
       <Navigation />
       <main className="relative z-10 pt-20">
-        <section className="mx-auto max-w-5xl px-6 py-24 md:px-20 md:py-36">
+        <section className="mx-auto max-w-5xl px-6 py-24 md:px-12 md:py-36">
           <FadeIn>
-            <div className="mb-6 font-mono text-sm tracking-[0.3em] text-orange-400 uppercase">{copy.eyebrow}</div>
-            <h1 className="text-5xl font-bold leading-tight md:text-7xl">{copy.title}</h1>
-            <p className="mt-8 max-w-3xl font-serif text-lg leading-relaxed text-gray-300">{copy.intro}</p>
+            <div className="mb-6 flex items-center gap-4"><Prompt cmd={kind === 'terms' ? './legal --terms' : './legal --privacy'} /><span className="font-mono text-[10px] uppercase tracking-[0.3em] text-orange-400/60">{copy.eyebrow}</span></div>
+            <h1 className="text-fluid-h2-lg font-bold leading-tight"><GlitchText>{copy.title}</GlitchText></h1>
+            <p className="measure mt-8 font-serif text-lg leading-relaxed text-gray-300">{copy.intro}</p>
             <p className="mt-4 font-mono text-xs tracking-widest text-gray-500 uppercase">{copy.updated}</p>
           </FadeIn>
 
@@ -110,8 +111,8 @@ function LegalPage({ kind }: { kind: PolicyKind }) {
             {copy.sections.map((section) => (
               <FadeIn key={section.title}>
                 <section>
-                  <h2 className="mb-4 text-2xl font-bold">{section.title}</h2>
-                  <div className="space-y-4 font-serif leading-relaxed text-gray-400">
+                  <h2 className="text-fluid-h3 mb-4 font-bold">{section.title}</h2>
+                  <div className="measure space-y-4 font-serif leading-relaxed text-gray-400">
                     {section.body.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
                   </div>
                 </section>

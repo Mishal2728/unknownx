@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Outfit:wght@300;400;500;700;800&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DotGothic16&family=Inter:wght@300;400;500&family=Outfit:wght@300;400;500;700;800&family=Silkscreen:wght@400;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=VT323&display=swap');
 @import 'tailwindcss';
 @import 'tw-animate-css';
 @plugin "@tailwindcss/typography";
@@ -54,6 +54,9 @@
   --app-font-sans: 'Outfit', sans-serif;
   --app-font-serif: 'Inter', sans-serif;
   --app-font-mono: 'Space Mono', monospace;
+  --app-font-pixel: 'Silkscreen', 'Space Mono', monospace;
+  --app-font-crt: 'VT323', 'Space Mono', monospace;
+  --app-font-dot: 'DotGothic16', 'Space Mono', monospace;
 }
 
 .dark {
@@ -79,9 +82,8 @@
 }
 
 @layer base {
-  html { scroll-behavior: smooth; }
   * { border-color: hsl(var(--border)); }
-  body { @apply font-sans antialiased bg-background text-foreground overflow-x-hidden; background-color: #010103; }
+  body { @apply font-sans antialiased bg-background text-foreground overflow-x-clip; background-color: #010103; }
   ::selection { background: rgba(100, 150, 255, 0.3); }
 
   main > section h2 {
@@ -154,8 +156,935 @@
 
   @media (min-width: 768px) { .launch-sequence-track { --launch-line-x: 1.15rem; } }
   @media (prefers-reduced-motion: reduce) {
-    html { scroll-behavior: auto; }
     body::after, main { animation: none; }
     *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
   }
 }
+
+/* =====================================================================
+   PREMIUM UI POLISH LAYER
+   Theme-safe upgrades only. Does NOT touch the Starfield, the global
+   signal glitch (body::after + main shake), the CursorDot, the color
+   tokens, or any routing/functionality. All animated effects below are
+   automatically neutralised by the prefers-reduced-motion block above.
+   ===================================================================== */
+
+/* --- Fluid typographic scale (smooth across mobile -> desktop) ------- */
+.text-fluid-hero   { font-size: clamp(3.25rem, 11vw, 9rem);    line-height: 0.86; letter-spacing: -0.03em; }
+.text-fluid-h1     { font-size: clamp(3rem, 9vw, 8rem);        line-height: 0.88; letter-spacing: -0.03em; }
+.text-fluid-h2     { font-size: clamp(2.25rem, 5.2vw, 4rem);   line-height: 1.02; letter-spacing: -0.02em; }
+.text-fluid-h2-lg  { font-size: clamp(2.5rem, 7vw, 5.5rem);    line-height: 0.98; letter-spacing: -0.025em; }
+.text-fluid-h3     { font-size: clamp(1.35rem, 2.2vw, 1.875rem); line-height: 1.15; letter-spacing: -0.01em; }
+.text-fluid-lead   { font-size: clamp(1.05rem, 1.6vw, 1.375rem); line-height: 1.6; }
+.measure           { max-width: 68ch; }
+.measure-tight     { max-width: 52ch; }
+
+/* Slightly lift body text contrast for readability on near-black. */
+.text-body-soft    { color: rgb(200 200 205); }
+
+/* --- Subtle film grain over everything (below the glitch layer) ------ */
+html::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  pointer-events: none;
+  opacity: 0.045;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* --- Accessible, on-theme focus states ------------------------------ */
+a:focus-visible,
+button:focus-visible,
+[role='button']:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid rgba(248, 113, 113, 0.65);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* --- Gradient hairline border (premium edge) ------------------------ */
+.edge-gradient { position: relative; isolation: isolate; }
+.edge-gradient::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  padding: 1px;
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(248,113,113,0.42), rgba(251,146,60,0.18) 38%, rgba(255,255,255,0.06) 60%, transparent 85%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+          mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+  opacity: 0.55;
+  transition: opacity 320ms ease;
+  pointer-events: none;
+  z-index: 1;
+}
+.edge-gradient:hover::before { opacity: 1; }
+
+/* --- Card sheen sweep + inner highlight on hover -------------------- */
+main article { position: relative; overflow: hidden; }
+main article::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -75%;
+  width: 55%;
+  height: 100%;
+  pointer-events: none;
+  background: linear-gradient(100deg, transparent, rgba(255,255,255,0.055) 45%, rgba(248,113,113,0.06) 55%, transparent);
+  transform: skewX(-18deg);
+  opacity: 0;
+  transition: opacity 240ms ease;
+}
+main article:hover::after {
+  opacity: 1;
+  animation: card-sheen 820ms ease-out;
+}
+@keyframes card-sheen {
+  from { left: -75%; }
+  to   { left: 130%; }
+}
+
+/* --- Icon tile treatment ------------------------------------------- */
+.icon-tile {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(248, 113, 113, 0.22);
+  background: linear-gradient(160deg, rgba(248,113,113,0.08), rgba(0,0,0,0.3));
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
+  transition: border-color 260ms ease, box-shadow 260ms ease, transform 260ms ease, color 260ms ease;
+}
+.group:hover .icon-tile {
+  border-color: rgba(248, 113, 113, 0.55);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 0 22px rgba(220, 38, 38, 0.18);
+  transform: translateY(-2px);
+}
+
+/* --- Button polish -------------------------------------------------- */
+.btn-cta {
+  position: relative;
+  overflow: hidden;
+  transition: background-color 260ms ease, color 260ms ease, transform 260ms ease, box-shadow 260ms ease, border-color 260ms ease;
+}
+.btn-cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 34px rgba(220, 38, 38, 0.16), 0 0 0 1px rgba(248,113,113,0.25);
+}
+.btn-cta:active { transform: translateY(0); }
+.btn-cta svg { transition: transform 260ms ease; }
+.btn-cta:hover svg { transform: translateX(4px); }
+
+/* --- Animated terminal-style nav underline -------------------------- */
+.nav-link { position: relative; }
+.nav-link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -6px;
+  height: 1px;
+  width: 100%;
+  background: linear-gradient(90deg, rgba(248,113,113,0.9), rgba(251,146,60,0.6));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 300ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.nav-link:hover::after { transform: scaleX(1); }
+.nav-link[data-active='true']::after { transform: scaleX(1); }
+
+/* --- Reveal helper for non-FadeIn elements -------------------------- */
+@keyframes rise-fade {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* --- Soft ambient glow accent -------------------------------------- */
+.glow-crimson { box-shadow: 0 0 40px rgba(220, 38, 38, 0.10); }
+.text-glow-crimson { text-shadow: 0 0 24px rgba(220, 38, 38, 0.22); }
+
+/* =====================================================================
+   BLACK ICE — BRUTALIST HACKER THEME  (full bold)
+   Underground / darknet terminal aesthetic for cards + text structure.
+   PRESERVES: Starfield blackhole + mouse lensing, CursorDot interaction,
+   the global signal glitch, the color palette, routing & functionality.
+   All motion below is auto-disabled by the prefers-reduced-motion block.
+   ===================================================================== */
+
+/* -- Hard-edged, monospace, uppercase headings ----------------------- */
+main h1, main h2, main h3 {
+  font-family: var(--app-font-mono);
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+}
+/* keep gradient hero spans readable in heavy mono */
+main h1 { line-height: 0.92; }
+
+/* Square off everything — brutalist has no soft corners. */
+main article,
+.btn-cta,
+.bi-card,
+main input,
+main textarea,
+main select,
+main .rounded-full,
+main [class*='rounded'] { border-radius: 0 !important; }
+
+/* -- Command-prompt section header ----------------------------------- */
+.bi-prompt {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0;
+  font-family: var(--app-font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  color: rgba(248, 113, 113, 0.85);
+  text-transform: none;
+}
+.bi-prompt .u { color: rgba(110, 231, 183, 0.8); }     /* user@host  */
+.bi-prompt .p { color: rgba(251, 146, 60, 0.75); }     /* path       */
+.bi-prompt .s { color: rgba(255, 255, 255, 0.35); }    /* symbols    */
+.bi-prompt .c { color: rgba(248, 113, 113, 0.95); }    /* command    */
+.bi-caret {
+  display: inline-block;
+  width: 0.5rem;
+  height: 0.95em;
+  margin-left: 0.25rem;
+  transform: translateY(0.1em);
+  background: rgba(248, 113, 113, 0.95);
+  animation: bi-blink 1.05s steps(1) infinite;
+}
+@keyframes bi-blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
+
+/* -- ASCII section divider ------------------------------------------- */
+.bi-rule {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-family: var(--app-font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(248, 113, 113, 0.55);
+}
+.bi-rule::before,
+.bi-rule::after {
+  content: '';
+  flex: 1;
+  height: 0;
+  border-top: 1px dashed rgba(248, 113, 113, 0.3);
+}
+.bi-rule .node { color: rgba(251, 146, 60, 0.7); }
+
+/* -- Glitch text on hover (uses data-text) --------------------------- */
+.bi-glitch { position: relative; display: inline-block; }
+.bi-glitch::before,
+.bi-glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  background: #010103;
+}
+.bi-glitch:hover::before {
+  opacity: 0.9;
+  color: #ff2d2d;
+  left: 2px;
+  text-shadow: -1px 0 #ff2d2d;
+  clip-path: inset(0 0 55% 0);
+  animation: bi-gl-top 0.42s steps(2) infinite;
+}
+.bi-glitch:hover::after {
+  opacity: 0.9;
+  color: #ffffff;
+  left: -2px;
+  text-shadow: 1px 0 rgba(255,255,255,0.7);
+  clip-path: inset(55% 0 0 0);
+  animation: bi-gl-bot 0.37s steps(2) infinite;
+}
+@keyframes bi-gl-top {
+  0% { transform: translate(0,0); } 50% { transform: translate(-3px,-1px); } 100% { transform: translate(2px,0); }
+}
+@keyframes bi-gl-bot {
+  0% { transform: translate(0,0); } 50% { transform: translate(3px,1px); } 100% { transform: translate(-2px,0); }
+}
+
+/* -- Brutalist card: offset hard shadow, bracket, scanlines ---------- */
+main article {
+  background:
+    repeating-linear-gradient(0deg, transparent 0 3px, rgba(255,255,255,0.012) 3px 4px),
+    #050506 !important;
+  border: 1px solid rgba(248, 113, 113, 0.28) !important;
+  box-shadow: 6px 6px 0 rgba(220, 38, 38, 0.14);
+  transition: transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease, background-color 200ms ease !important;
+}
+main article:hover {
+  transform: translate(-3px, -3px);
+  box-shadow: 10px 10px 0 rgba(220, 38, 38, 0.3) !important;
+  border-color: rgba(248, 113, 113, 0.6) !important;
+}
+/* top-left corner bracket */
+main article::before {
+  content: '';
+  position: absolute;
+  top: 7px;
+  left: 7px;
+  width: 14px;
+  height: 14px;
+  border-top: 2px solid rgba(248, 113, 113, 0.7);
+  border-left: 2px solid rgba(248, 113, 113, 0.7);
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* -- Standalone brutalist card (non-article elements) ---------------- */
+.bi-card {
+  position: relative;
+  background:
+    repeating-linear-gradient(0deg, transparent 0 3px, rgba(255,255,255,0.012) 3px 4px),
+    #050506;
+  box-shadow: 6px 6px 0 rgba(220, 38, 38, 0.14);
+}
+.bi-card::before {
+  content: '';
+  position: absolute;
+  top: 7px;
+  left: 7px;
+  width: 14px;
+  height: 14px;
+  border-top: 2px solid rgba(248, 113, 113, 0.7);
+  border-left: 2px solid rgba(248, 113, 113, 0.7);
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* -- Brutalist buttons: hard offset shadow, invert on hover ---------- */
+.btn-cta {
+  border: 1px solid rgba(248, 113, 113, 0.5) !important;
+  box-shadow: 4px 4px 0 rgba(220, 38, 38, 0.3);
+}
+.btn-cta:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 7px 7px 0 rgba(220, 38, 38, 0.45) !important;
+}
+.btn-cta:active { transform: translate(0, 0); box-shadow: 2px 2px 0 rgba(220,38,38,0.4) !important; }
+
+/* -- Hazard stripe divider ------------------------------------------- */
+.bi-hazard {
+  height: 7px;
+  width: 100%;
+  background-image: repeating-linear-gradient(
+    -45deg,
+    rgba(248, 113, 113, 0.55) 0 10px,
+    transparent 10px 20px
+  );
+}
+
+/* -- System alert panel ---------------------------------------------- */
+.bi-alert {
+  border: 1px solid rgba(248, 113, 113, 0.45);
+  background: rgba(220, 38, 38, 0.06);
+  box-shadow: inset 0 0 0 1px rgba(248,113,113,0.1);
+  font-family: var(--app-font-mono);
+}
+
+/* -- Warning chevron bullet ------------------------------------------ */
+.bi-chev::before {
+  content: '»»» ';
+  color: rgba(248, 113, 113, 0.75);
+  font-family: var(--app-font-mono);
+}
+
+/* -- Status tag ------------------------------------------------------ */
+.bi-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  border: 1px solid rgba(248, 113, 113, 0.35);
+  background: rgba(0, 0, 0, 0.5);
+  padding: 0.15rem 0.5rem;
+  font-family: var(--app-font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(248, 113, 113, 0.9);
+}
+
+/* =====================================================================
+   BLACK ICE — BOOT / DECRYPT INTRO OVERLAY
+   ===================================================================== */
+.boot-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  background: #010103;
+  background-image:
+    repeating-linear-gradient(0deg, transparent 0 2px, rgba(255,255,255,0.025) 2px 3px);
+  opacity: 1;
+  transition: opacity 0.6s ease;
+}
+.boot-overlay.boot-closing { opacity: 0; }
+.boot-inner {
+  width: min(680px, 100%);
+  font-family: var(--app-font-mono);
+}
+.boot-banner {
+  color: rgba(248, 113, 113, 0.9);
+  text-shadow: 0 0 18px rgba(220, 38, 38, 0.35);
+  font-size: clamp(0.3rem, 1.6vw, 0.62rem);
+  line-height: 1.05;
+  margin: 0 0 0.75rem;
+  white-space: pre;
+  overflow: hidden;
+  animation: boot-flicker 2.4s infinite;
+}
+@keyframes boot-flicker {
+  0%, 100% { opacity: 1; }
+  48% { opacity: 1; }
+  49% { opacity: 0.72; }
+  50% { opacity: 1; }
+  92% { opacity: 0.85; }
+}
+.boot-sub {
+  color: rgba(110, 231, 183, 0.7);
+  font-size: 0.6rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px dashed rgba(248, 113, 113, 0.2);
+  padding-bottom: 0.9rem;
+}
+.boot-log { display: flex; flex-direction: column; gap: 0.35rem; font-size: 0.72rem; }
+.boot-line { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; color: rgba(255,255,255,0.78); animation: rise-fade 0.25s ease; }
+.boot-prompt { color: rgba(248, 113, 113, 0.9); }
+.boot-text { letter-spacing: 0.06em; }
+.boot-bar { color: rgba(110, 231, 183, 0.85); letter-spacing: 0.05em; white-space: pre; }
+.boot-status { margin-left: auto; letter-spacing: 0.12em; }
+.boot-status-ok { color: rgba(110, 231, 183, 0.9); }
+.boot-status-granted { color: #010103; background: rgba(248, 113, 113, 0.95); padding: 0 0.4rem; font-weight: 700; }
+
+/* =====================================================================
+   BLACK ICE — INTERACTIVE SECURE SHELL
+   ===================================================================== */
+.term-launcher {
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 9000;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border: 1px solid rgba(248, 113, 113, 0.5);
+  background: rgba(5, 5, 6, 0.92);
+  box-shadow: 4px 4px 0 rgba(220, 38, 38, 0.3);
+  padding: 0.55rem 0.85rem;
+  font-family: var(--app-font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(248, 113, 113, 0.95);
+  transition: transform 180ms ease, box-shadow 180ms ease, background-color 180ms ease;
+  backdrop-filter: blur(6px);
+}
+.term-launcher:hover { transform: translate(-2px, -2px); box-shadow: 7px 7px 0 rgba(220, 38, 38, 0.45); background: rgba(10, 10, 12, 0.95); }
+
+.term-panel {
+  position: fixed;
+  right: 1rem;
+  bottom: 4rem;
+  z-index: 9001;
+  width: min(440px, calc(100vw - 2rem));
+  height: min(380px, 60vh);
+  display: flex;
+  flex-direction: column;
+  border: 1px solid rgba(248, 113, 113, 0.45);
+  background: rgba(3, 4, 5, 0.97);
+  box-shadow: 8px 8px 0 rgba(220, 38, 38, 0.22), 0 0 50px rgba(0,0,0,0.6);
+  backdrop-filter: blur(8px);
+  font-family: var(--app-font-mono);
+  animation: rise-fade 0.2s ease;
+}
+.term-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  border-bottom: 1px solid rgba(248, 113, 113, 0.2);
+  background: rgba(248, 113, 113, 0.05);
+  padding: 0.5rem 0.7rem;
+}
+.term-dots { display: flex; gap: 0.3rem; }
+.term-dots i { width: 0.55rem; height: 0.55rem; border-radius: 9999px; display: block; }
+.term-title { font-size: 0.58rem; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(255,255,255,0.45); }
+.term-bar button { margin-left: auto; color: rgba(255,255,255,0.5); }
+.term-bar button:hover { color: rgba(248, 113, 113, 0.9); }
+
+.term-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0.8rem;
+  font-size: 0.72rem;
+  line-height: 1.5;
+  color: rgba(255,255,255,0.8);
+}
+.term-row { white-space: pre-wrap; word-break: break-word; }
+.term-in { color: rgba(255,255,255,0.95); }
+.term-out { color: rgba(180, 180, 188, 0.9); }
+.term-sys { color: rgba(110, 231, 183, 0.85); }
+.term-ps { color: rgba(248, 113, 113, 0.9); }
+
+.term-input {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-top: 1px solid rgba(248, 113, 113, 0.2);
+  padding: 0.6rem 0.8rem;
+}
+.term-input input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #fff;
+  font-family: var(--app-font-mono);
+  font-size: 0.72rem;
+  caret-color: rgba(248, 113, 113, 0.95);
+}
+
+/* =====================================================================
+   DOT-MATRIX (Nothing-OS style, DotGothic16) — applied site-wide to
+   EVERYTHING except headings. Body, paragraphs, labels, buttons, nav,
+   prompts, tags, terminal chrome, forms. Headings stay VT323 (below);
+   ASCII art stays Space Mono so block glyphs render.
+   ===================================================================== */
+body { font-family: var(--app-font-dot); }
+.font-sans,
+.font-serif,
+.font-mono,
+.bi-prompt,
+.bi-rule,
+.bi-tag,
+.bi-chev,
+.term-launcher,
+.term-title,
+.term-body,
+.term-input input,
+.boot-sub,
+.boot-line,
+.nav-link,
+main input,
+main textarea,
+main select,
+main button,
+main a[class*='font-mono'] {
+  font-family: var(--app-font-dot) !important;
+}
+
+.font-mono { letter-spacing: 0.03em; line-height: 1.5; }
+.bi-prompt { letter-spacing: 0.02em; }
+
+/* Keep ASCII / block-drawing glyphs in true monospace to avoid broken art. */
+.boot-banner,
+.boot-bar,
+.boot-line .boot-bar {
+  font-family: var(--app-font-mono) !important;
+}
+
+/* =====================================================================
+   VT323 — classic CRT terminal for headlines + important text + shell
+   ===================================================================== */
+main h1, main h2, main h3,
+.bi-glitch,
+.bi-glitch::before,
+.bi-glitch::after {
+  font-family: var(--app-font-crt) !important;
+}
+/* VT323 is compact; open the tracking a touch at display sizes. */
+main h1, main h2, main h3 { letter-spacing: 0.01em; }
+
+/* Unified heading size — every major heading matches the hero
+   "Build Your Business With Us". (Sub/card titles use .text-fluid-h3.) */
+.text-fluid-hero,
+.text-fluid-h1,
+.text-fluid-h2,
+.text-fluid-h2-lg,
+.text-hero-sm {
+  font-size: clamp(2.4rem, 7vw, 6rem);
+  line-height: 0.92;
+  letter-spacing: -0.03em;
+}
+
+/* Big price / stat numbers = important text -> CRT. */
+.text-crt { font-family: var(--app-font-crt) !important; }
+
+/* Nothing-OS-style dot-matrix font (opt-in). */
+.font-dot { font-family: var(--app-font-dot) !important; letter-spacing: 0.02em; }
+
+/* Smaller hero headline variant. */
+.text-hero-sm { font-size: clamp(2.4rem, 7vw, 6rem); line-height: 0.9; letter-spacing: -0.03em; }
+
+/* Burning fuse (launch sequence) */
+.fuse-rope {
+  background: repeating-linear-gradient(45deg, rgba(234, 179, 8, 0.6) 0 2px, rgba(146, 94, 20, 0.5) 2px 5px);
+  border-radius: 2px;
+}
+.fuse-burnt {
+  background: linear-gradient(to bottom, rgba(40, 40, 44, 0.95), rgba(90, 35, 18, 0.95));
+  border-radius: 2px;
+  box-shadow: 0 6px 10px rgba(251, 146, 60, 0.35);
+}
+.fuse-spark {
+  display: block;
+  width: 12px;
+  height: 20px;
+  margin: -14px 0 0 0;
+  border-radius: 50% 50% 50% 50% / 62% 62% 38% 38%;
+  background: linear-gradient(to top, #ef4444 0%, #fb923c 40%, #fde047 78%, #fff 100%);
+  box-shadow: 0 0 14px 4px rgba(253, 224, 71, 0.7), 0 0 30px 10px rgba(251, 146, 60, 0.45);
+  transform-origin: bottom center;
+  animation: fuse-flicker 0.6s ease-in-out infinite;
+}
+@keyframes fuse-flicker {
+  0%, 100% { transform: scaleY(1) scaleX(1); }
+  35% { transform: scaleY(1.18) scaleX(0.92); }
+  65% { transform: scaleY(0.94) scaleX(1.05); }
+}
+
+/* --- firelight cast on the BACKGROUND behind the open text --- */
+.flame-bg {
+  position: absolute;
+  left: -2.5rem;
+  top: 50%;
+  width: 70%;
+  height: 170%;
+  transform: translateY(-50%);
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 6% 50%, rgba(251,146,60,0.26), rgba(239,68,68,0.12) 38%, transparent 68%);
+  filter: blur(12px);
+  animation: bg-fire 1.4s ease-in-out infinite;
+}
+@keyframes bg-fire {
+  0%, 100% { opacity: 0.72; transform: translateY(-50%) scaleX(1); }
+  50%      { opacity: 1;    transform: translateY(-50%) scaleX(1.05); }
+}
+/* keep the text itself only lightly warmed (glow lives on the background) */
+.text-flame h3 { color: #ffe6c2; }
+.text-flame p { color: rgba(253, 224, 180, 0.72); }
+
+/* charred / cooled text once burned */
+.text-charred h3 { color: rgba(120, 96, 88, 0.85); text-shadow: 0 1px 2px rgba(0,0,0,0.6); }
+.text-charred p { color: rgba(110, 100, 96, 0.55); }
+
+@keyframes flame-lick {
+  0%   { opacity: 0.55; transform: scaleY(1) translateY(0); }
+  50%  { opacity: 1;    transform: scaleY(1.18) translateY(-3px); }
+  100% { opacity: 0.7;  transform: scaleY(0.92) translateY(0); }
+}
+.box-smoke {
+  position: absolute;
+  left: -2.2rem;
+  top: -14px;
+  width: 40px;
+  height: 46px;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse at 50% 100%, rgba(120,120,125,0.22), transparent 62%);
+  filter: blur(6px);
+  animation: smoke-rise 2.6s ease-in-out infinite;
+}
+@keyframes smoke-rise {
+  0%   { opacity: 0; transform: translateY(6px) scaleX(0.9); }
+  40%  { opacity: 0.5; }
+  100% { opacity: 0; transform: translateY(-20px) scaleX(1.3); }
+}
+
+/* Access-grant recruiting: card expands + stamp PUNCHES down on hover */
+.access-card { transform: scale(1); }
+.access-card:hover {
+  animation: card-punch 0.42s cubic-bezier(0.2, 1.4, 0.35, 1) forwards;
+  z-index: 5;
+}
+@keyframes card-punch {
+  0%   { transform: scale(1);    box-shadow: 0 0 0 rgba(220,38,38,0); }
+  50%  { transform: scale(1.065); box-shadow: 0 0 46px rgba(220,38,38,0.28); }
+  68%  { transform: scale(1.02); }
+  100% { transform: scale(1.045); box-shadow: 0 0 30px rgba(220,38,38,0.15); }
+}
+
+.access-stamp {
+  opacity: 0;
+  transform: rotate(-12deg) scale(2.3);
+  transform-origin: center;
+}
+.access-card:hover .access-stamp {
+  animation: stamp-in 0.4s cubic-bezier(0.2, 1.6, 0.3, 1) forwards;
+}
+@keyframes stamp-in {
+  0%   { opacity: 0;    transform: rotate(-12deg) scale(2.4); }
+  48%  { opacity: 1;    transform: rotate(-12deg) scale(0.82); }   /* hard impact */
+  70%  { opacity: 1;    transform: rotate(-12deg) scale(1.12); }
+  100% { opacity: 0.95; transform: rotate(-12deg) scale(1); }
+}
+
+/* impact ring burst at the moment the stamp lands */
+.access-ring {
+  position: absolute;
+  right: 3.2rem;
+  top: 1.1rem;
+  height: 12px;
+  width: 12px;
+  border: 2px solid rgba(239, 68, 68, 0.7);
+  border-radius: 50%;
+  opacity: 0;
+  pointer-events: none;
+}
+.access-card:hover .access-ring {
+  animation: ring-burst 0.5s ease-out 0.14s forwards;
+}
+@keyframes ring-burst {
+  0%   { opacity: 0.85; transform: scale(0.4); }
+  100% { opacity: 0;    transform: scale(3.4); }
+}
+
+
+/* Flipper-Zero-style LCD screen (orbital system cards) */
+.flipper-screen {
+  background-color: #04160f;
+  background-image:
+    radial-gradient(120% 90% at 50% 45%, rgba(16, 185, 129, 0.16), transparent 70%),
+    radial-gradient(rgba(16, 185, 129, 0.14) 1px, transparent 1.5px);
+  background-size: 100% 100%, 4px 4px;
+  box-shadow: inset 0 0 0 2px rgba(16, 185, 129, 0.22), inset 0 0 26px rgba(16, 185, 129, 0.16);
+}
+.flipper-screen::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(0deg, transparent 0 2px, rgba(0, 0, 0, 0.18) 2px 3px);
+}
+
+/* Radar scope (contact) */
+.radar {
+  position: relative;
+  width: clamp(240px, 70vw, 360px);
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  background:
+    repeating-radial-gradient(circle at 50% 50%, transparent 0 15.5%, rgba(16, 185, 129, 0.14) 15.5% 15.8%),
+    radial-gradient(circle at 50% 50%, rgba(16, 185, 129, 0.08), transparent 72%);
+  overflow: hidden;
+}
+.radar::before {
+  /* cross-hair */
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to right, transparent calc(50% - 0.5px), rgba(16, 185, 129, 0.2) 50%, transparent calc(50% + 0.5px)),
+    linear-gradient(to bottom, transparent calc(50% - 0.5px), rgba(16, 185, 129, 0.2) 50%, transparent calc(50% + 0.5px));
+}
+.radar-sweep {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: conic-gradient(from 0deg, rgba(16, 185, 129, 0.45), rgba(16, 185, 129, 0.08) 28%, transparent 42%);
+  animation: radar-spin 3.6s linear infinite;
+}
+@keyframes radar-spin { to { transform: rotate(360deg); } }
+.radar-blip {
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: rgba(110, 231, 183, 0.95);
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.8);
+  transform: translate(-50%, -50%);
+  animation: blip-pulse 2s ease-in-out infinite;
+}
+@keyframes blip-pulse { 0%, 100% { opacity: 0.4; transform: translate(-50%, -50%) scale(0.8); } 50% { opacity: 1; transform: translate(-50%, -50%) scale(1.3); } }
+
+/* Tier slider (pricing) */
+.tier-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(90deg, rgba(16, 185, 129, 0.5), rgba(248, 113, 113, 0.5));
+  outline: none;
+  cursor: pointer;
+}
+.tier-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #050908;
+  border: 2px solid rgba(248, 113, 113, 0.95);
+  box-shadow: 0 0 16px rgba(220, 38, 38, 0.45), inset 0 0 6px rgba(248, 113, 113, 0.4);
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.tier-slider::-webkit-slider-thumb:hover { transform: scale(1.12); box-shadow: 0 0 22px rgba(220, 38, 38, 0.6); }
+.tier-slider::-moz-range-thumb {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #050908;
+  border: 2px solid rgba(248, 113, 113, 0.95);
+  box-shadow: 0 0 16px rgba(220, 38, 38, 0.45);
+  cursor: pointer;
+}
+
+/* Interactive shell + boot log read like a real default terminal. */
+.term-launcher,
+.term-title,
+.term-body,
+.term-input input,
+.boot-sub,
+.boot-line {
+  font-family: var(--app-font-crt) !important;
+}
+.term-body, .term-input input { font-size: 0.95rem; line-height: 1.45; letter-spacing: 0.01em; }
+
+/* Node-graph connection wire flow (active edge). */
+@keyframes edge-dash { to { stroke-dashoffset: -16; } }
+.edge-active { stroke-dasharray: 4 4; animation: edge-dash 0.6s linear infinite; }
+
+/* Isometric server rack */
+.rack-scene { perspective: 1500px; }
+.rack-3d {
+  transform-style: preserve-3d;
+  transform: rotateX(4deg) rotateY(-19deg);
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.rack-3d:hover { transform: rotateX(3deg) rotateY(-12deg); }
+.rack-unit {
+  transform-style: preserve-3d;
+  transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease, background-color 0.35s ease;
+}
+.rack-unit.on { transform: translateZ(55px) translateX(12px); }
+@keyframes led-blink { 0%, 100% { opacity: 0.2; } 50% { opacity: 1; } }
+.led { animation: led-blink 1.5s infinite; }
+@media (max-width: 640px) {
+  .rack-3d { transform: rotateX(3deg) rotateY(-10deg); }
+  .rack-unit.on { transform: translateZ(28px) translateX(6px); }
+}
+
+/* =====================================================================
+   TERMINAL INTRO — runs over the live blackhole starfield, then warps in
+   ===================================================================== */
+.intro-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  overflow: hidden;
+  display: flex;
+  opacity: 1;
+  transform: scale(1);
+  filter: blur(0);
+  transition: opacity 0.75s ease, transform 0.75s cubic-bezier(0.16, 1, 0.3, 1), filter 0.75s ease;
+}
+.intro-overlay::after {
+  /* soft vignette so terminal text stays legible over the stars */
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: radial-gradient(circle at 50% 48%, rgba(1,1,3,0.55) 0%, rgba(1,1,3,0.3) 45%, transparent 75%);
+}
+/* CRT power-off reveal: collapse to a bright line, then shrink to a dot */
+.intro-overlay.intro-crtoff {
+  transform-origin: center center;
+  animation: crt-off 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+@keyframes crt-off {
+  0%   { transform: scale(1, 1);        opacity: 1; filter: brightness(1); }
+  42%  { transform: scale(1, 0.006);    opacity: 1; filter: brightness(2.8) contrast(1.4); }
+  58%  { transform: scale(1, 0.006);    opacity: 1; filter: brightness(3.4) contrast(1.5); }
+  100% { transform: scale(0, 0.004);    opacity: 0; filter: brightness(6); }
+}
+/* bright glow line at the collapse moment */
+.intro-overlay.intro-crtoff .intro-screen { animation: crt-fade 0.22s ease forwards; }
+@keyframes crt-fade { to { opacity: 0; } }
+
+/* CRT power-off page transition between routes */
+.page-transition {
+  position: fixed;
+  inset: 0;
+  z-index: 9400;
+  background: #010103;
+  pointer-events: none;
+  transform-origin: center center;
+  animation: crt-off 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.intro-screen {
+  position: relative;
+  z-index: 2;
+  width: min(720px, 100%);
+  margin: auto auto;
+  padding: 2rem 1.75rem;
+  align-self: center;
+  font-size: clamp(0.95rem, 2.1vw, 1.25rem);
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.9);
+  text-shadow: 0 0 12px rgba(0, 0, 0, 0.9);
+  animation: rise-fade 0.4s ease;
+}
+/* normal macOS-style terminal monospace (system fonts, no web load) */
+.intro-mac {
+  font-family: 'SF Mono', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas',
+    'Liberation Mono', 'Courier New', monospace !important;
+  letter-spacing: 0;
+}
+.intro-line { animation: rise-fade 0.22s ease; }
+.intro-bar { letter-spacing: -0.05em; }
+.intro-banner {
+  font-family: var(--app-font-mono) !important;
+  white-space: pre;
+  overflow: hidden;
+  margin: 0;
+  color: rgba(110, 231, 183, 0.9);
+  text-shadow: 0 0 14px rgba(16, 185, 129, 0.4);
+  font-size: clamp(0.28rem, 1.5vw, 0.62rem);
+  line-height: 1.05;
+  animation: boot-flicker 2.6s infinite;
+}
+@keyframes boot-flicker {
+  0%, 100% { opacity: 1; }
+  48% { opacity: 1; }
+  49% { opacity: 0.74; }
+  50% { opacity: 1; }
+  92% { opacity: 0.86; }
+}
+.intro-cursor {
+  display: inline-block;
+  width: 0.6ch;
+  height: 1.1em;
+  margin-left: 0.15rem;
+  transform: translateY(0.15em);
+  background: rgba(110, 231, 183, 0.95);
+  animation: bi-blink 1s steps(1) infinite;
+}
+
+/* =====================================================================
+   CASE BALANCE — no global uppercase. Capitals only where the markup
+   already opts in (eyebrows, labels, buttons, nav, tags, terminal chrome
+   via the Tailwind `uppercase` class, and headings via BLACK ICE).
+   Everything else (paragraphs, descriptions) stays natural small case.
+   ===================================================================== */

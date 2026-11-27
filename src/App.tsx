@@ -2,6 +2,11 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Route, Switch } from 'wouter';
 
 import { LanguageProvider } from './context/LanguageContext';
+import { BootSequence } from './components/BootSequence';
+import { Terminal } from './components/Terminal';
+import { CommandPalette } from './components/CommandPalette';
+import { PageTransition } from './components/PageTransition';
+import { SmoothScroll } from './components/SmoothScroll';
 import Home from './pages/Home';
 import Applicant from './pages/Applicant';
 import Pricing from './pages/Pricing';
@@ -32,10 +37,15 @@ export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <LanguageProvider>
+        <SmoothScroll />
+        <BootSequence />
         <div className="flex min-h-screen flex-col justify-between">
           <Router />
           <Footer />
         </div>
+        <Terminal />
+        <CommandPalette />
+        <PageTransition />
       </LanguageProvider>
     </QueryClientProvider>
   );
